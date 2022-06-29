@@ -7,7 +7,7 @@ const app = express()
 const port = 5035
 const bodyParser= require('body-parser')
 const dotenv = require('dotenv').config()
-const routes = require('./routers/userRouter')
+const routes = require('./routers')
 const dbUser = process.env.DB_USER
 const dbPass = process.env.DB_PASSWORD
 const url = `mongodb+srv://${dbUser}:${dbPass}@cluster0.0ovozff.mongodb.net/?retryWrites=true&w=majority`
@@ -39,9 +39,3 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
   app.use("/", routes)
 
 })
-
-// const db = mongoose.connection;
-// db.on("error", console.error.bind(console, "connection error: "));
-// db.once("open", function () {
-//   console.log("Connected successfully");
-// });
