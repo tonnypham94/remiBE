@@ -1,33 +1,47 @@
 // Call in installed dependencies
-const express = require('express');
+const express = require('express')
+const mongoose = require('mongoose')
 // set up express app
-const app = express();
+const app = express()
 // set up port number
-const port = 5035;
-// set up home route
-app.get('/', (request, respond) => {
-  respond.status(200).json({
-    message: 'Welcome to Project Support',
-  });
-});
-app.listen(port, (request, respond) => {
-  console.log(`Our server is live on ${port}. Yay!`);
-});
+const port = 5035
+const bodyParser= require('body-parser')
+const dotenv = require('dotenv').config()
+const routes = require('./routers/userRouter')
+const dbUser = process.env.DB_USER
+const dbPass = process.env.DB_PASSWORD
+const url = `mongodb+srv://${dbUser}:${dbPass}@cluster0.0ovozff.mongodb.net/?retryWrites=true&w=majority`
 
-app.post("/register", function (req, res) {
-console.log('req, res', req, res)
-  var username = req.body.username
-  var password = req.body.password
-  User.register(new User({ username: username }),
-          password, function (err, user) {
-      if (err) {
-          console.log(err);
-          return res.render("register");
-      }
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+  // Test API
+  app.listen(port, (request, respond) => {
+    console.log(`Our server is live on ${port}. Yay!`)
+  })
+  // Add headers to pass CORS
+  app.use(function (req, res, next) {
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type')
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true)
+    // Pass to next layer of middleware
+    next()
+  })
+  // Generate request data
+  app.use(bodyParser.urlencoded({ extended: true }))
+  app.use(bodyParser.json())
+  // All routes
+  app.use("/", routes)
 
-      passport.authenticate("local")(
-          req, res, function () {
-          res.render("secret");
-      });
-  });
-});
+})
+
+// const db = mongoose.connection;
+// db.on("error", console.error.bind(console, "connection error: "));
+// db.once("open", function () {
+//   console.log("Connected successfully");
+// });
