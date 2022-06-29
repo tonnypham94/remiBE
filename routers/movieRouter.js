@@ -12,13 +12,15 @@ router.get("/movie", async (req, res) => {
       if (err) return res.status(500).send(err)
       return res.status(200).send(result)
     }
-  )
+  ).clone()
 })
 
 router.post("/movie/shared", async (req, res) => {
   const newMovie = new Movie({
     email: req.body.value.email,
-    sharedMovie: req.body.value.sharedMovie
+    sharedMovieId: req.body.value.sharedMovieId,
+    title: req.body.value.title,
+    description: req.body.value.description
   })
   await newMovie.save(err => {
     if (err) return res.json({error_code:0, err_desc: err})

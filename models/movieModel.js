@@ -3,7 +3,9 @@ const Schema = mongoose.Schema
 
 const movieSchema = new Schema({
   email: String,
-  sharedMovie: String,
+  sharedMovieId: String,
+  title: String,
+  description: String,
 })
 
 module.exports = mongoose.model('Movie', movieSchema)

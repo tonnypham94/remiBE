@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 // set up express app
 const app = express()
 // set up port number
-const port = 5035
+const port = process.env.PORT || 8000
 const bodyParser= require('body-parser')
 const dotenv = require('dotenv').config()
 const routes = require('./routers')
